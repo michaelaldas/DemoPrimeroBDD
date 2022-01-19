@@ -19,8 +19,6 @@ namespace IU_Libros
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            try
-            {
                 var context = new SistemasEntities();
                 var libro = new Libros()
                 {
@@ -39,12 +37,6 @@ namespace IU_Libros
                 txtPrecio.Clear();
                 txtEditorial.Clear();
                 VerGrid();
-            }
-            catch (Exception E)
-            {
-                MessageBox.Show(E.Message.ToString());
-            }
-
         }
         public void VerGrid()
         {
@@ -59,10 +51,8 @@ namespace IU_Libros
         private void btnEliminar_Click(object sender, EventArgs e)
         {
 
-            if (MessageBox.Show("¿ESTAS SEGURO QUE DESEAS Eliminar?", "CONFIRMAR", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("DESEAS Eliminar...?", "CONFIRMAR", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                try
-                {
                     var context = new SistemasEntities();
                     var libro2 = new Libros()
                     {
@@ -72,34 +62,31 @@ namespace IU_Libros
                     context.Libros.Attach(libro2);
                     context.Libros.Remove(libro2);
                     context.SaveChanges();
-                    MessageBox.Show("PERSONA ELIMINADA CON EXITO", "ELIMINO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Libro eliminado...", "ELIMINO", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtId.Clear();
+                    txtAutor.Clear();
+                    txtTitulo.Clear();
+                    txtPrecio.Clear();
+                    txtEditorial.Clear();
                     VerGrid();
-                }
-                catch (Exception e1)
-                {
-                    MessageBox.Show(e1.Message.ToString());
-
-                }
             }
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿ESTAS SEGURO QUE DESEAS ACTUALIZAR?", "CONFIRMAR", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("DESEAS ACTUALIZAR...?", "CONFIRMAR", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                try
-                {
                     int autorID = Convert.ToInt32(txtBusca.Text.ToString());
-                    using (SistemasEntities context=new SistemasEntities())
+                    using (SistemasEntities IDcontext=new SistemasEntities())
                     {
-                        Libros oLibros = (from q in context.Libros where q.id == autorID select q).First();
+                        Libros oLibros = (from q in IDcontext.Libros where q.id == autorID select q).First();
                         oLibros.id = Convert.ToInt32(txtId.Text.ToString());
                         oLibros.autor = txtAutor.Text.ToString();
                         oLibros.titulo = txtTitulo.Text.ToString();
                         oLibros.precio = Convert.ToDecimal(txtPrecio.Text.ToString());
                         oLibros.editorial = txtEditorial.Text.ToString();
-                        context.SaveChanges();
+                        IDcontext.SaveChanges();
+                        MessageBox.Show("Libro actualizado.....");
                         txtId.Clear();
                         txtAutor.Clear();
                         txtTitulo.Clear();
@@ -108,12 +95,6 @@ namespace IU_Libros
                         VerGrid();
 
                     }
-                }
-                catch (Exception e1)
-                {
-                    MessageBox.Show(e1.Message.ToString());
-
-                }
             }
         }
 
@@ -124,12 +105,10 @@ namespace IU_Libros
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            try
-            {
                 int busqueda = Convert.ToInt32(txtBusca.Text.ToString());
-                using (SistemasEntities BuscarID = new SistemasEntities())
+                using (SistemasEntities Busqueda = new SistemasEntities())
                 {
-                    IQueryable<Libros> objBuscar = from q in BuscarID.Libros where q.id == busqueda select q;
+                    IQueryable<Libros> objBuscar = from q in Busqueda.Libros where q.id == busqueda select q;
                     List<Libros> lista = objBuscar.ToList();
                     var oID = lista[0];
                     txtId.Text = Convert.ToString(oID.id.ToString());
@@ -138,11 +117,6 @@ namespace IU_Libros
                     txtPrecio.Text = Convert.ToString(oID.precio.ToString());
                     txtEditorial.Text = oID.editorial;
                 }
-            }
-            catch (Exception E)
-            {
-                MessageBox.Show(E.Message.ToString());
-            }
           
             }
         }
